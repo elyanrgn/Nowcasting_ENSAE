@@ -23,6 +23,5 @@ uv.lock
 .ipynb_checkpoints/
 
 # Data
-data/*
 !data/.gitkeep
 EOF
