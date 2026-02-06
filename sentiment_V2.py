@@ -9,7 +9,7 @@ from tqdm import tqdm
 # ==========================================
 DATA_DIR = "data"
 BATCH_SIZE = 8 
-TEST_MODE = False # Garde True pour vérifier que les scores ne sont plus à 0
+TEST_MODE = False # True pour tester
 
 SENTIMENT_MODEL = "cardiffnlp/twitter-xlm-roberta-base-sentiment"
 THEME_MODEL = "MoritzLaurer/mDeBERTa-v3-base-mnli-xnli"
@@ -79,10 +79,7 @@ def process_final(file_name, text_column):
     
     return df
 
-# Lancement ('ecb_monetary_policy_decisions_2020_2026.csv', 'text'),('french_economy_news.csv', 'title'),
-for file, col in [
-                  
-                  ('german_economy_news.csv', 'title')]:
+for file, col in [('ecb_monetary_policy_decisions_2020_2026.csv', 'text'),('french_economy_news.csv', 'title'), ('german_economy_news.csv', 'title')]:
     res_df = process_final(file, col)
     if res_df is not None:
         res_df.to_csv(os.path.join(DATA_DIR, f"final_{file}"), index=False)
