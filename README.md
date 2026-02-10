@@ -51,8 +51,10 @@ Les scores sont agrégés au niveau hebdomadaire pour produire un indice global 
 
 Le spread hebdomadaire $Y_t$ est modélisé comme suit :
 
-$Y_t$ = $\alpha$ + $\beta_{Fund} $ $\cdot$ $X_{t-1}$ + $\beta_{Narr}$ $\cdot$ 
-$Sent^{Presse}_{t} $ + $\beta_{BCE} $ $\cdot$ $Sent^{BCE}_{t} $ + $\gamma$ $\cdot$ $Y_{t-1}$ + $\varepsilon_t$
+```math
+Y_t = \alpha + \beta_{\text{Fund}} X_{t-1} + \beta_{\text{Narr}}\,Sent^{\text{Presse}}_{t}
+      + \beta_{\text{BCE}}\,Sent^{\text{BCE}}_{t} + \gamma Y_{t-1} + \varepsilon_t
+
 
 - $Y_t$ : spread OAT/Bund à la semaine $t$.
 - $X_{t-1}$ : fondamentaux macroéconomiques retardés (pour limiter les biais de simultanéité).
