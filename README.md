@@ -55,14 +55,14 @@ Le spread hebdomadaire $Y_t$ est modélisé comme suit :
 Y_t = \alpha + \beta_{\text{Fund}} X_{t-1} + \beta_{\text{Narr}}\,Sent^{\text{Presse}}_{t}
       + \beta_{\text{BCE}}\,Sent^{\text{BCE}}_{t} + \gamma Y_{t-1} + \varepsilon_t
 
-
+```
 - $Y_t$ : spread OAT/Bund à la semaine $t$.
 - $X_{t-1}$ : fondamentaux macroéconomiques retardés (pour limiter les biais de simultanéité).
 - $Sent^{Presse}_t$ : sentiment médiatique contemporain.
 - $Sent^{BCE}_{t}$ : sentiment des communiqués de politique monétaire (0 en absence de communiqué).
 - $Y_{t-1}$ : composante autoregressive capturant la persistance du spread.
 
-```
+
 ### 4.4 Prime de risque narrative
 
 - Construction d’un spread contrefactuel $\hat{Y}^{NoNews}_t$ en imposant $Sent^{Presse}_t = 0$ .
