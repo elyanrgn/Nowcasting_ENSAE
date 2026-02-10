@@ -1,4 +1,4 @@
-# README – Projet PESSD  
+# Projet PESSD  
 *Spreads souverains, narratif médiatique et fondamentaux macroéconomiques*
 
 ## 1. Description du projet
@@ -51,14 +51,12 @@ Les scores sont agrégés au niveau hebdomadaire pour produire un indice global 
 
 Le spread hebdomadaire $Y_t$ est modélisé comme suit :
 
-$
-Y_t = \alpha + \beta_{Fund} \cdot X_{t-1} + \beta_{Narr} \cdot Sent^{Presse}_t + \beta_{BCE} \cdot Sent^{BCE}_t + \gamma \cdot Y_{t-1} + \varepsilon_t
-$
+$Y_t = \alpha + \beta_{Fund} \cdot X_{t-1} + \beta_{Narr} \cdot Sent^{Presse}_t + \beta_{BCE} \cdot Sent^{BCE}_t + \gamma \cdot Y_{t-1} + \varepsilon_t$
 
 - $Y_t$ : spread OAT/Bund à la semaine $t$.
 - $X_{t-1}$ : fondamentaux macroéconomiques retardés (pour limiter les biais de simultanéité).
 - $Sent^{Presse}_t$ : sentiment médiatique contemporain.
-- $Sent^{BCE}_t$ : sentiment des communiqués de politique monétaire (0 en absence de communiqué).
+- $Sent^{BCE}_{t}$ : sentiment des communiqués de politique monétaire (0 en absence de communiqué).
 -$Y_{t-1}$ : composante autoregressive capturant la persistance du spread.
 ### 4.4 Prime de risque narrative
 
