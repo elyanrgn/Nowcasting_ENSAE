@@ -27,9 +27,6 @@ DOMAIN_PATTERNS_FR = [
     "lepoint",
     "marianne",
     "mediapart",
-    "ladepeche",
-    "ouest-france",
-    "sudouest",
 ]
 
 DOMAIN_PATTERNS_DE = [
@@ -80,7 +77,7 @@ SCORING_KEYWORDS_FR = {
     "désinflation": 3,
     "ipc": 3,
     "hausse des prix": 3,
-    "prix": 2,
+    "prix": 1,
     "prix de l'énergie": 3,
     # Énergie
     "énergie": 2,
@@ -170,7 +167,7 @@ SCORING_KEYWORDS_DE = {
     "inflationsrate": 4,
     "verbraucherpreise": 3,
     "preisanstieg": 3,
-    "preise": 2,
+    "preise": 1,
     # Énergie
     "energie": 2,
     "energiepreise": 3,
