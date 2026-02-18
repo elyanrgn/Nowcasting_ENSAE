@@ -1,7 +1,7 @@
 import pandas as pd
 import json
 from scrapping_articles_fun import extract_news_fixed
-
+from exclude_bad_articles import remove_articles_not_about_country
 
 # KEYWORDS USED FOR SCRAPPING ARTICLES FROM GNEWS
 
@@ -247,11 +247,12 @@ articles_fr, _ = extract_news_fixed(
     broad_queries=BROAD_QUERIES_FR,
     scoring_keywords=SCORING_KEYWORDS_FR,
     domain_patterns=DOMAIN_PATTERNS_FR,
-    start_date="2020-01-01",
+    start_date="2025-01-01",
+    end_date="2025-12-31",
     language="fr",
     country="FR",
     min_score=2,
-    period_days=14,
+    period_days=7,
     verbose=True,
 )
 
@@ -264,40 +265,47 @@ if articles_fr:
     else:
         print("\nToujours 0 articles - vérifier les requêtes GNews")
 
-with open("articles_fr_final2npart.json", "w", encoding="utf-8") as f:
+with open("articles_fr_final2026.json", "w", encoding="utf-8") as f:
     json.dump(articles_fr, f, ensure_ascii=False, indent=2)
 
-articles_fr = pd.read_json("articles_fr_final.json")
+articles_fr = pd.read_json("articles_fr_final2026.json")
 articles_fr["date"] = pd.to_datetime(articles_fr["published"], errors="coerce")
 articles_fr.index = articles_fr["date"]
 articles_fr.sort_index(inplace=True)
-
-articles_fr.to_csv("data\\articles_fr_final.csv", index=True)
+articles_fr = remove_articles_not_about_country(articles_fr, "France", language="fra")
+articles_fr.to_csv("data\\raw\\articles_fr_final2026.csv", index=True)
 
 
 articles_de, _ = extract_news_fixed(
     broad_queries=BROAD_QUERIES_DE,
     scoring_keywords=SCORING_KEYWORDS_DE,
     domain_patterns=DOMAIN_PATTERNS_DE,
-    start_date="2020-01-01",
+    start_date="2025-01-01",
+    end_date="2025-12-31",
     language="de",
     country="DE",
     min_score=2,
+    period_days=7,
     verbose=True,
 )
 
 if articles_de:
-    print("Top 15 articles:")
+    print("\nTop 15 articles (meilleurs scores):")
     for i, a in enumerate(articles_de[:15]):
         print(f"\n{i + 1}. [Score {a['relevance_score']}] [{a['source']}]")
         print(f"{a['title']}")
         print(f"KW: {', '.join(a['matched_keywords'][:5])}")
+    else:
+        print("\nToujours 0 articles - vérifier les requêtes GNews")
 
-with open("articles_de_final.json", "w", encoding="utf-8") as f:
+with open("articles_de_final2026.json", "w", encoding="utf-8") as f:
     json.dump(articles_de, f, ensure_ascii=False, indent=2)
 
-articles_de = pd.read_json("articles_de_final.json")
+articles_de = pd.read_json("articles_de_final2026.json")
 articles_de["date"] = pd.to_datetime(articles_de["published"], errors="coerce")
 articles_de.index = articles_de["date"]
 articles_de.sort_index(inplace=True)
-articles_de.to_csv("data\\articles_de_final.csv", index=True)
+articles_de = remove_articles_not_about_country(
+    articles_de, "Deutschland", language="deu"
+)
+articles_de.to_csv("data\\raw\\articles_de_final2026.csv", index=True)
