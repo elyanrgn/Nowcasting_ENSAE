@@ -7,12 +7,12 @@ from tqdm import tqdm
 # ==========================================
 # 1. CONFIGURATION & FILTRES DE TEST
 # ==========================================
-DATA_DIR = "data" 
+DATA_DIR = "data/raw" 
 BATCH_SIZE = 32  
 
 # --- PARAMÈTRES DE TEST (DATES) ---
-START_DATE = "2020-01-01" 
-END_DATE = "2020-01-31"   
+START_DATE = None
+END_DATE = None
 # ----------------------------------
 
 device = 0 if torch.cuda.is_available() else -1
@@ -120,8 +120,8 @@ def process_and_score(file_name, text_col, lang):
 # ==========================================
 # 4. EXÉCUTION & AGRÉGATION
 # ==========================================
-df_fr = process_and_score('articles_fr_final.csv', 'title', 'fr')
-df_de = process_and_score('articles_de_final.csv', 'title', 'de')
+df_fr = process_and_score('articles_fr_final2026.csv', 'title', 'fr')
+df_de = process_and_score('articles_de_final2026.csv', 'title', 'de')
 
 print("\n--- Création du fichier agrégé ---")
 if df_fr is not None and df_de is not None:
