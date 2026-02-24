@@ -18,7 +18,8 @@ def extract_real_domain(article):
             try:
                 netloc = urlparse(href).netloc.lower().replace("www.", "")
                 return netloc
-            except:
+            except Exception as e:
+                print(f"Erreur parsing publisher['href']: {e}")
                 pass
 
     # Fallback : essayer l'URL principale (mais ce sera news.google.com)
@@ -26,7 +27,8 @@ def extract_real_domain(article):
     try:
         netloc = urlparse(url).netloc.lower().replace("www.", "")
         return netloc
-    except:
+    except Exception as e:
+        print(f"Erreur parsing article['url']: {e}")
         return ""
 
 
