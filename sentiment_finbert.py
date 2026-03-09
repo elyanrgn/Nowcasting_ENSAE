@@ -3,6 +3,7 @@ import os
 import torch
 from transformers import pipeline, AutoTokenizer, AutoModelForSeq2SeqLM
 from tqdm import tqdm
+# pip install sentencepiece sacremoses
 
 # 1. CONFIGURATION & FILTRES DE TEST
 DATA_DIR = "data/raw" 
