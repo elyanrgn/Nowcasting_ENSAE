@@ -1,7 +1,6 @@
 from tqdm import tqdm
 from pays import Countries
 
-
 def remove_articles_not_about_country(data, country_name, language="fra"):
     countries = Countries(language)
     titles = data["title"]

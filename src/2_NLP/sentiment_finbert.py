@@ -6,9 +6,11 @@ from tqdm import tqdm
 # pip install sentencepiece sacremoses
 
 # 1. CONFIGURATION & FILTRES DE TEST
-DATA_DIR = "data/raw" 
-DATA_DIR_PROCESSED = "data/processed"
-BATCH_SIZE = 32  
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+DATA_DIR = os.path.join(BASE_DIR, "data", "raw")
+DATA_DIR_PROCESSED = os.path.join(BASE_DIR, "data", "news_processed")
+os.makedirs(DATA_DIR_PROCESSED, exist_ok=True)
+BATCH_SIZE = 32
 
 # --- PARAMÈTRES DE TEST (DATES) ---
 START_DATE = None # None si pas de test
@@ -110,8 +112,8 @@ def process_and_score(file_name, text_col, lang):
     return df
 
 # 4. EXÉCUTION & AGRÉGATION
-df_fr = process_and_score('articles_fr_final2026.csv', 'title', 'fr')
-df_de = process_and_score('articles_de_final2026.csv', 'title', 'de')
+df_fr = process_and_score('articles_fr_final2025.csv', 'title', 'fr')
+df_de = process_and_score('articles_de_final2025.csv', 'title', 'de')
 
 print("\n--- Création du fichier agrégé ---")
 if df_fr is not None and df_de is not None:
@@ -134,4 +136,4 @@ if df_fr is not None and df_de is not None:
     df_agg.to_csv(output_agg)
     print(f"Fichier agrégé exporté : {output_agg}")
 
-print("\nTerminé !")
+print("\nTerminé")
