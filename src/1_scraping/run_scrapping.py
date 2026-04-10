@@ -265,15 +265,15 @@ if articles_fr:
     else:
         print("\nToujours 0 articles - vérifier les requêtes GNews")
 
-with open("articles_fr_final2026.json", "w", encoding="utf-8") as f:
+with open("articles_fr_final2025.json", "w", encoding="utf-8") as f:
     json.dump(articles_fr, f, ensure_ascii=False, indent=2)
 
-articles_fr = pd.read_json("articles_fr_final2026.json")
+articles_fr = pd.read_json("articles_fr_final2025.json")
 articles_fr["date"] = pd.to_datetime(articles_fr["published"], errors="coerce")
 articles_fr.index = articles_fr["date"]
 articles_fr.sort_index(inplace=True)
 articles_fr = remove_articles_not_about_country(articles_fr, "France", language="fra")
-articles_fr.to_csv("data\\raw\\articles_fr_final2026.csv", index=True)
+articles_fr.to_csv("data\\raw\\articles_fr_final2025.csv", index=True)
 
 
 articles_de, _ = extract_news_fixed(
@@ -298,14 +298,14 @@ if articles_de:
     else:
         print("\nToujours 0 articles - vérifier les requêtes GNews")
 
-with open("articles_de_final2026.json", "w", encoding="utf-8") as f:
+with open("articles_de_final2025.json", "w", encoding="utf-8") as f:
     json.dump(articles_de, f, ensure_ascii=False, indent=2)
 
-articles_de = pd.read_json("articles_de_final2026.json")
+articles_de = pd.read_json("articles_de_final2025.json")
 articles_de["date"] = pd.to_datetime(articles_de["published"], errors="coerce")
 articles_de.index = articles_de["date"]
 articles_de.sort_index(inplace=True)
 articles_de = remove_articles_not_about_country(
     articles_de, "Deutschland", language="deu"
 )
-articles_de.to_csv("data\\raw\\articles_de_final2026.csv", index=True)
+articles_de.to_csv("data\\raw\\articles_de_final2025.csv", index=True)
