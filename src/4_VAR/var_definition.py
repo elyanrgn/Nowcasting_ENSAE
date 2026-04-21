@@ -13,6 +13,9 @@ def stationarity_test(series, significance_level=0.05):
 
 
 def make_stationary(series):
+    # check if series is constant
+    if series.nunique() <= 1:
+        return series
     is_stat, _ = stationarity_test(series)
     while not is_stat:
         series = series.diff().dropna()
@@ -26,9 +29,10 @@ class model_VAR:
         self.data = data
         self.max_lag = max_lag
 
-    def fit(self, criterion="aic"):
-        for series in self.data.columns:
-            self.data.loc[:, series] = make_stationary(self.data[series])
+    def fit(self, stationnarize=False, criterion="aic"):
+        if stationnarize:
+            for series in self.data.columns:
+                self.data.loc[:, series] = make_stationary(self.data[series])
         self.model = VAR(self.data)
         self.results = self.model.fit(maxlags=self.max_lag, ic=criterion)
 
