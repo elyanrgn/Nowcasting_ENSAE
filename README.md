@@ -18,20 +18,21 @@ L’objectif est de quantifier la part de spread expliquée par les indices de s
 
 ```text
 .
-├── compute_residuals.ipynb
 ├── data/
 │   ├── news_processed/
+│   ├── other_indices/
 │   ├── outputs/
 │   ├── processed/
-│   └── raw/
+│   ├── raw/
+│   └── short_rate/
 ├── README.md
 ├── sentiment_viz.ipynb
 ├── src/
 │   ├── 1_scraping/
 │   ├── 2_NLP/
-|   ├── 3_LinearReg / 
-|   └── 4_VAR
-|
+│   ├── 3_LinearReg/
+│   │   └── compute_residuals.ipynb
+│   └── 4_VAR/
 └── uv.lock
 ```
 
@@ -57,14 +58,14 @@ L’objectif est de quantifier la part de spread expliquée par les indices de s
  
 - `src/3_LinearReg/compute_residuals.ipynb`
   - Réalise l'analyse en composante principale des données macroéconomiques.
-  - Aggrège toutes les données macroéconomiques, financières, et de sentiments.
-  - Réalise la **régression finale** du projet.
+  - Agrège toutes les données macroéconomiques, financières, et de sentiments.
+  - Exécute la **régression finale** du projet et exporte les résidus de spread.
 
-- `src/4_VAR/var_definiton.py
-  - Défini une classe VAR optimisée à notre problème
+- `src/4_VAR/var_definition.py`
+  - Définit une classe VAR optimisée à notre problème.
 
-- `src/4_VAR/var_sentiment.ipynb
-    - Utilise la classe du script ci-dessus afin de générer des IRF avec le score de sentiments.
+- `src/4_VAR/var_sentiment.ipynb`
+  - Utilise la classe du script ci-dessus afin de générer des IRF avec le score de sentiments.
 
 ### Notebooks
 
@@ -74,25 +75,61 @@ L’objectif est de quantifier la part de spread expliquée par les indices de s
 
 ## Données disponibles
 
-### Données brutes (`data/raw/`)
+### Données brutes et sources (`data/raw/`)
 
-- `articles_fr_final2025.csv`
-- `articles_de_final2025.csv`
-- `articles_fr_final2024.csv`
-- `articles_de_final2024.csv`
-- `articles_fr_final2023.csv`
-- `articles_de_final2023.csv`
-- `ecb_monetary_policy_decisions_2020_2026.csv`
-- `macro_processed.csv`
-- `Rendement de l'Obligation Allemagne 10 ans - Données Historiques.csv`
-- `Rendement de l'Obligation France 10 ans - Données Historiques (1).csv`
+- Articles collectés par pays et par année :
+  - `articles_fr_final2023.csv`, `articles_fr_final2023.json`
+  - `articles_de_final2023.csv`, `articles_de_final2023.json`
+  - `articles_fr_final2024.csv`, `articles_fr_final2024.json`
+  - `articles_de_final2024.csv`, `articles_de_final2024.json`
+  - `articles_fr_final2025.csv`
+  - `articles_de_final2025.csv`
+- Bases macroéconomiques :
+  - `FRdata.xlsx`, `DEdata.xlsx`
+  - `FRdataM_HT.xlsx`, `DEdataM_HT.xlsx`
+  - `macro_processed.csv`
+- Sources financières et monétaires :
+  - `ecb_monetary_policy_decisions_2020_2026.csv`
+  - `Rendement de l'Obligation Allemagne 10 ans - Données Historiques.csv`
+  - `Rendement de l'Obligation France 10 ans - Données Historiques (1).csv`
 
-### Données traitées
+### Données de sentiment (`data/news_processed/`)
 
-- `data/news_processed/finbert_articles_fr_final2026.csv`
-- `data/news_processed/finbert_articles_de_final2026.csv`
-- `data/news_processed/aggregated_daily_finbert.csv`
-- `data/outputs/epsilon_spread.csv`
+- Fichiers articles scorés par FinBERT :
+  - `finbert_articles_fr_final2023.csv`
+  - `finbert_articles_de_final2023.csv`
+  - `finbert_articles_fr_final2024.csv`
+  - `finbert_articles_de_final2024.csv`
+  - `finbert_articles_fr_final2026.csv`
+  - `finbert_articles_de_final2026.csv`
+- Agrégations journalières :
+  - `aggregated_daily_finbert2023.csv`
+  - `aggregated_daily_finbert2024.csv`
+  - `aggregated_daily_finbert_2025.csv`
+
+### Données macroéconomiques traitées (`data/processed/`)
+
+- `FRdata_monthly.xlsx`
+- `DEdata_monthly.xlsx`
+- `FRdataM_HT.xlsx`
+- `DEdataM_HT.xlsx`
+- `Joint_Macro_Dataset.csv`
+
+### Taux courts et volatilité (`data/short_rate/`)
+
+- `FR_short.csv`
+- `DE_short.csv`
+- `VSTOXX.csv`
+
+### Indices complémentaires (`data/other_indices/`)
+
+- `FREUINDXM.csv`
+- `DEEPUINDXM.csv`
+- `ei_bssi_m_r2_page_linear.csv`
+
+### Sorties finales (`data/outputs/`)
+
+- `epsilon_spread.csv`
 
 ## Pipeline général
 
@@ -101,8 +138,10 @@ L’objectif est de quantifier la part de spread expliquée par les indices de s
 3. Nettoyage des articles non pertinents.
 4. Traduction FR/DE → EN.
 5. Scoring de sentiment avec FinBERT.
-6. Agrégation des scores journaliers.
-7. Analyse du spread OAT/Bund et calcul de la prime narrative.
+6. Agrégation des scores journaliers dans `data/news_processed/`.
+7. Harmonisation des bases macroéconomiques et construction de `data/processed/Joint_Macro_Dataset.csv`.
+8. Analyse du spread OAT/Bund dans `src/3_LinearReg/compute_residuals.ipynb` : ACP des fondamentaux, intégration des variables financières et de sentiment, puis **régression finale**.
+9. Export des résidus de spread dans `data/outputs/epsilon_spread.csv`.
 
 ## Installation
 
@@ -135,7 +174,7 @@ Packages optionnels utiles :
 2. Placez les fichiers bruts dans `data/raw/`.
 3. Lancez `python src/1_scraping/run_scrapping.py`.
 4. Lancez `python src/2_NLP/sentiment_finbert.py`.
-5. Ouvrez `compute_residuals.ipynb` et `sentiment_viz.ipynb`.
+5. Ouvrez `src/3_LinearReg/compute_residuals.ipynb` et `sentiment_viz.ipynb`.
 
 ## Notes
 
