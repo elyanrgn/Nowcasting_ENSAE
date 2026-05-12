@@ -28,7 +28,10 @@ L’objectif est de quantifier la part de spread expliquée par les indices de s
 ├── sentiment_viz.ipynb
 ├── src/
 │   ├── 1_scraping/
-│   └── 2_NLP/
+│   ├── 2_NLP/
+|   ├── 3_LinearReg / 
+|   └── 4_VAR
+|
 └── uv.lock
 ```
 
@@ -51,11 +54,20 @@ L’objectif est de quantifier la part de spread expliquée par les indices de s
   - Traduit les titres FR/DE en anglais.
   - Applique le modèle `ProsusAI/finbert` pour scorer le sentiment.
   - Exporte les résultats traités dans `data/news_processed/`.
+ 
+- `src/3_LinearReg/compute_residuals.ipynb`
+  - Réalise l'analyse en composante principale des données macroéconomiques.
+  - Aggrège toutes les données macroéconomiques, financières, et de sentiments.
+  - Réalise la **régression finale** du projet.
+
+- `src/4_VAR/var_definiton.py
+  - Défini une classe VAR optimisée à notre problème
+
+- `src/4_VAR/var_sentiment.ipynb
+    - Utilise la classe du script ci-dessus afin de générer des IRF avec le score de sentiments.
 
 ### Notebooks
 
-- `compute_residuals.ipynb`
-  - Analyse des résidus et du spread.
 
 - `sentiment_viz.ipynb`
   - Visualisations des indices de sentiment et du spread.
@@ -66,6 +78,10 @@ L’objectif est de quantifier la part de spread expliquée par les indices de s
 
 - `articles_fr_final2025.csv`
 - `articles_de_final2025.csv`
+- `articles_fr_final2024.csv`
+- `articles_de_final2024.csv`
+- `articles_fr_final2023.csv`
+- `articles_de_final2023.csv`
 - `ecb_monetary_policy_decisions_2020_2026.csv`
 - `macro_processed.csv`
 - `Rendement de l'Obligation Allemagne 10 ans - Données Historiques.csv`
