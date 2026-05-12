@@ -3,16 +3,14 @@ import os
 import torch
 from transformers import pipeline, AutoTokenizer, AutoModelForSeq2SeqLM
 from tqdm import tqdm
-# pip install sentencepiece sacremoses
 
-# 1. CONFIGURATION & FILTRES DE TEST
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 DATA_DIR = os.path.join(BASE_DIR, "data", "raw")
 DATA_DIR_PROCESSED = os.path.join(BASE_DIR, "data", "news_processed")
 os.makedirs(DATA_DIR_PROCESSED, exist_ok=True)
 BATCH_SIZE = 32
 
-# --- PARAMÈTRES DE TEST (DATES) ---
+# PARAMÈTRES DE TEST
 START_DATE = None  # None si pas de test
 END_DATE = None  # None si pas de test
 
@@ -24,10 +22,8 @@ MODEL_SENTIMENT = "ProsusAI/finbert"
 MODEL_TRAD_FR_EN = "Helsinki-NLP/opus-mt-fr-en"
 MODEL_TRAD_DE_EN = "Helsinki-NLP/opus-mt-de-en"
 
-# 2. CHARGEMENT DES MODÈLES
-print("Chargement des modèles (Les warnings 'UNEXPECTED' sont normaux)...")
+print("Chargement des modèles...")
 
-# 2.1. Pipeline Sentiment
 tokenizer_finbert = AutoTokenizer.from_pretrained(MODEL_SENTIMENT)
 sentiment_pipe = pipeline(
     "sentiment-analysis",
@@ -37,7 +33,6 @@ sentiment_pipe = pipeline(
     torch_dtype=dtype,
 )
 
-# 2.2. Traduction
 print("Chargement Traduction FR-EN...")
 tok_fr = AutoTokenizer.from_pretrained(MODEL_TRAD_FR_EN)
 mod_fr = AutoModelForSeq2SeqLM.from_pretrained(MODEL_TRAD_FR_EN).to(device)
@@ -51,10 +46,9 @@ if dtype == torch.float16:
     mod_de = mod_de.half()
 
 
-# 3. FONCTIONS DE TRAITEMENT
 def map_finbert(
     result,
-):  # Renvoie le score entre -1 et 1 selon le label (negatif, neutre, positif)
+):  
     label = result["label"].lower()
     score = result["score"]
     if label == "negative":
@@ -113,7 +107,6 @@ def process_and_score(file_name, text_col, lang):
 
     texts = df[text_col].fillna("").astype(str).str[:400].tolist()
 
-    # 1. Traduction robuste
     if lang == "fr":
         translated_texts = translate(texts, tok_fr, mod_fr)
     else:
@@ -121,7 +114,6 @@ def process_and_score(file_name, text_col, lang):
 
     df["title_translated"] = translated_texts
 
-    # 2. Sentiment FinBERT
     scores = []
     for out in tqdm(
         sentiment_pipe(translated_texts, batch_size=BATCH_SIZE, truncation=True),
@@ -141,11 +133,10 @@ def process_and_score(file_name, text_col, lang):
     return df
 
 
-# 4. EXÉCUTION & AGRÉGATION
 df_fr = process_and_score("articles_fr_final2023.csv", "title", "fr")
 df_de = process_and_score("articles_de_final2023.csv", "title", "de")
 
-print("\n--- Création du fichier agrégé ---")
+print("\nCréation du fichier agrégé")
 if df_fr is not None and df_de is not None:
     agg_fr = df_fr.groupby("date_clean").agg(
         nb_articles_fr=("sentiment_score", "count"),
@@ -164,6 +155,6 @@ if df_fr is not None and df_de is not None:
 
     output_agg = os.path.join(DATA_DIR_PROCESSED, "aggregated_daily_finbert2023.csv")
     df_agg.to_csv(output_agg)
-    print(f"Fichier agrégé exporté : {output_agg}")
+    print(f"Fichier agrégé : {output_agg}")
 
 print("\nTerminé")
